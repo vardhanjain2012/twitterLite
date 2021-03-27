@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Flask Template Example</title>
+  </head>
+  <body>
+    <div>
+      <p>{{message}}</p> 	
+      <p>My Feed:</p>
+        <ul>
+            {% for flight in flights %}
+            <li>{{ flight }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+  </body>
+</html>
