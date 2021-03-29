@@ -1,0 +1,22 @@
+29th March
+    Features:
+        Feed - tweets, retweeets, replies of folowings (with link to profile of who tweeted), use time of tweets?
+        Create tweet
+        my profile
+        Explore -   Seach Trending, Tweets, User, 
+        User Profile - following (and no.of), followers(and no. of), option to followers, user activity - tweets, retweets and replies, follow option
+
+    Inform:
+        Changes to the directory - new files and directories --explain the changes
+            added twitter_lite.py - can be run directly w/o adding app to bash
+            env - stores the virtual environment (optional)
+            Project_notes - we can add our notes here
+        Cleaning the data:
+            Remove the first line from WordTable.txt
+            create user_list_w_newid.txt from user_list.txt with first column as newid -- shared on whatsapp
+        Creating the database:
+            CREATE DATABASE twitter_lite;
+            db_build.sql  -- shared on whatsapp (need to create the tweet table)
+            Add more constraints to tables?
+        Use index for optimization?
+
