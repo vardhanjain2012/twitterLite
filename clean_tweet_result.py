@@ -96,7 +96,7 @@ with open(filename) as f:
         
         l = f.readline()
         j+=1
-        if (i == 1000000):
-            break
+        # if (i == 1000000):
+        #     break
         
         

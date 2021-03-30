@@ -1,0 +1,80 @@
+<!-- <!DOCTYPE html>
+<html>
+  <head>
+    <title>Flask Template Example</title>
+  </head>
+  <body>
+    <div>
+      <p>Explore:</p>
+        <ul>
+            {% for users in pop_users_by_replies %}
+            <li>{{ users['name'] }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+  </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <style>
+      * {
+      font-family: sans-serif;
+      color: @text-color;
+      }
+      body {
+          background: white;
+          margin: 0;
+          padding: 0;
+      }
+      h1 {
+          font-size: 25px;
+          height: 23px;
+      }
+      p {
+          padding: 0 24px;
+          margin: 18px 0;
+      }
+      header{
+        font-size: 25px;
+        height: 23px;
+        font-family: "Lucida Console", "Courier New", monospace;
+        color: #77a4df;
+        font-weight: bold;
+      }
+      .myDiv {
+        border: 1px solid #155ab4;
+          background: white;
+          margin-top: 50px;
+          border-radius: 6px;
+          font-size: 14px;
+          float: right;
+          width: 200px;
+          text-align: center;
+        }
+        .wrapper{
+          margin: 0px auto;
+          padding: 30px;
+          border-bottom: 5px solid #155ab4
+        }
+    </style>
+    <title>Explore!</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}" />
+</head>
+<body>
+  <div class="wrapper">
+  <header>
+    twitter lite
+  </header>
+  <div class="myDiv">
+  <h1>Trending Users</h1>
+      {% for users in pop_users_by_replies %}
+      <p> @{{ users['name'] }} </p>
+      {% endfor %}
+  </div>
+  </div>
+</body>
+</html>
+
