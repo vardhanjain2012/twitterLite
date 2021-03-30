@@ -33,6 +33,10 @@
           font-size: 25px;
           height: 23px;
       }
+      h2 {
+          font-size: 20px;
+          height: 20px;
+      }
       p {
           padding: 0 24px;
           margin: 18px 0;
@@ -50,7 +54,7 @@
           margin-top: 50px;
           border-radius: 6px;
           font-size: 14px;
-          float: right;
+          float: left;
           width: 200px;
           text-align: center;
         }
@@ -60,23 +64,21 @@
           border-bottom: 5px solid #155ab4
         }
     </style>
-    <title>Explore!</title>
+    <title>{{name}}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}" />
 </head>
 <body>
-  <div class="wrapper">
-  <header>
-    twitter lite
-  </header>
-  <div class="myDiv">
-  <h1>Trending Users</h1>
-      {% for user in pop_users_by_replies %}
-      <p>
-      <a href="{{ url_for('profile', name = user['name']) }}">@{{ user['name'] }}</a>
-      </p>
-      {% endfor %}
-  </div>
-  </div>
+    <div class="wrapper">
+        <header>
+            twitter lite
+        </header>
+        <div class="myDiv">
+            <h2>{{name}}</h2>
+            <p>following:</p>
+            <p>followers:</p>
+        </div>
+    </div>
+  
 </body>
 </html>
 

@@ -41,26 +41,26 @@ def explore():
     con.close()
     return render_template("explore.html", pop_users_by_replies = pop_users_by_replies)
 
-# @app.route('/profile/')
-# def explore():
-#     con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='490023')
-#     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+@app.route('/profile/<name>')
+def profile(name):
+    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='490023')
+    cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
-#     pop_users_by_replies_q ='''SELECT u.name, count(*) as n_replies
-#                             FROM tweets_withoutwords as t, user_map as u
-#                             WHERE u.name = t.reply_to_user
-#                             GROUP BY u.name
-#                             ORDER BY n_replies desc
-#                             LIMIT 10'''
+    # followers ='''SELECT u.name, count(*) as count
+    #                         FROM user_map as u1, user_list_w_newid as u_dash1, graph_cb, 
+    #                         WHERE u.oldid = user_list_w_newid.oldid AND user_list_w_newid.newid = 
+    #                         GROUP BY u.name
+    #                         ORDER BY n_replies desc
+    #                         LIMIT 10'''
 
-#     cur.execute(pop_users_by_replies_q)
+    # cur.execute(pop_users_by_replies_q)
 
-#     pop_users_by_replies = cur.fetchall()
+    # pop_users_by_replies = cur.fetchall()
 
-#     con.commit()
-#     cur.close()
-#     con.close()
-#     return render_template("explore.html", pop_users_by_replies = pop_users_by_replies)
+    con.commit()
+    cur.close()
+    con.close()
+    return render_template("profile.html", name = name)
 
 
 if __name__ == "__main__":
