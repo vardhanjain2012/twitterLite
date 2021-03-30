@@ -20,18 +20,18 @@ with open(filename) as f:
 
         if(j == j_end):
             if(j_end == 7):
-                print(l.strip() + ";", end = "")
-                print("{};{}")
+                print(l.strip() + "\t", end = "")
+                print("{}"+"\t"+"{}")
             else:
                 # print(l.strip())
                 l_split = l.strip().split()
                 # print(len(l_split), file=sys.stderr)
                 if(len(l_split) < 3):
-                    link_types.append("")
-                    links.append("")
+                    link_types.append("-")
+                    links.append("-")
                 else:
-                    link_types.append(l_split[1])
-                    links.append(l_split[2])
+                    link_types.append(l_split[1].replace(',', ''))
+                    links.append(l_split[2].replace(',', ''))
                 print("{", end = "")
                 k = 0
                 for link_type in link_types:
@@ -40,7 +40,7 @@ with open(filename) as f:
                         print(link_type, end = "")
                     else: 
                         print(link_type + ",", end = "")
-                print("}" + ";", end = "")
+                print("}" + "\t", end = "")
                 print("{", end = "")
                 k = 0
                 for link in links:
@@ -63,22 +63,22 @@ with open(filename) as f:
                     l_split = l.strip().split()
                     # print(len(l_split), file=sys.stderr)
                     if(len(l_split) < 3):
-                        link_types.append("")
-                        links.append("")
+                        link_types.append("-")
+                        links.append("-")
                     else:
-                        link_types.append(l_split[1])
-                        links.append(l_split[2])
+                        link_types.append(l_split[1].replace(',', ''))
+                        links.append(l_split[2].replace(',', ''))
                 elif (j == 2):
                     l_split = l.strip().split()
-                    print(l_split[1] + "-" + l_split[2] + "-" + l_split[5] + ";", end = "")
-                    print(l_split[3] + ";", end ="")
+                    print(l_split[1] + "-" + l_split[2] + "-" + l_split[5] + "\t", end = "")
+                    print(l_split[3] + "\t", end ="")
                 elif (j == 5):
                     if(l.strip() == "-1"):
-                        print("-1" + ";", end = "")
-                        print("-1" + ";", end = "")
+                        print("-1" + "\t", end = "")
+                        print("-1" + "\t", end = "")
                     else:
-                        print(l.strip().split()[0] + ";", end = "")
-                        print(l.strip().split()[1] + ";", end = "")
+                        print(l.strip().split()[0] + "\t", end = "")
+                        print(l.strip().split()[1] + "\t", end = "")
                 elif (j == 6):
                     print("{", end = "")
                     l_split = l.strip().split()
@@ -89,14 +89,14 @@ with open(filename) as f:
                             print(num, end = ",")
                         else:
                             print(num, end = "")
-                    print("}" + ";", end = "")
+                    print("}" + "\t", end = "")
                 else:
-                    print(l.strip() + ";", end = "")
+                    print(l.strip() + "\t", end = "")
             
         
         l = f.readline()
         j+=1
-        # if (i == 100):
-        #     break
+        if (i == 1000000):
+            break
         
         

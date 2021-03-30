@@ -23,7 +23,9 @@
 30th March
     Inform:
         db_build.sql added to github
-        clean_tweet_result.py to get tweet data is psql form added to github
-        get_id_map.py to get newid oldid map of users added to git
+        clean_tweet_result.py to get tweet data in psql form added to github
+        get_id_map.py to get newid oldid map of users added to github
+
+    
 
 
