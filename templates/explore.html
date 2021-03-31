@@ -44,7 +44,7 @@
         color: #77a4df;
         font-weight: bold;
       }
-      .myDiv {
+      .rightPanel {
         border: 1px solid #155ab4;
           background: white;
           margin-top: 50px;
@@ -52,8 +52,42 @@
           font-size: 14px;
           float: right;
           width: 200px;
+          height: 400px;
           text-align: center;
+          overflow-y:scroll;
+          overflow: auto;
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         }
+        .leftPanel {
+        border: 1px solid #155ab4;
+          background: white;
+          margin-top: 50px;
+          border-radius: 6px;
+          font-size: 14px;
+          float: left;
+          width: 250px;
+          height: 400px;
+          text-align: center;
+          overflow: auto;
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        }
+        /* width */        
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
         .wrapper{
           margin: 0px auto;
           padding: 30px;
@@ -61,18 +95,25 @@
         }
     </style>
     <title>Explore!</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}" />
 </head>
 <body>
   <div class="wrapper">
   <header>
     twitter lite
   </header>
-  <div class="myDiv">
+  <div class="rightPanel">
   <h1>Trending Users</h1>
       {% for user in pop_users_by_replies %}
       <p>
       <a href="{{ url_for('profile', name = user['name']) }}">@{{ user['name'] }}</a>
+      </p>
+      {% endfor %}
+  </div>
+  <div class="leftPanel">
+  <h1>Trending Hashtags</h1>
+      {% for hastags in trending_hashtags %}
+      <p>
+      #{{ hastags['tag'][13:] }}
       </p>
       {% endfor %}
   </div>

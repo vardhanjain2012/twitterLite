@@ -1,14 +1,77 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Flask Template Example</title>
+    <style>
+      * {
+      font-family: sans-serif;
+      color: @text-color;
+      }
+      body {
+          background: white;
+          margin: 0;
+          padding: 0;
+      }
+      h1 {
+          font-size: 25px;
+          height: 23px;
+      }
+      h2 {
+          font-size: 18px;
+      }
+      p {
+          padding: 0 24px;
+          margin: 18px 0;
+      }
+      header{
+        font-size: 25px;
+        height: 23px;
+        font-family: "Lucida Console", "Courier New", monospace;
+        color: #77a4df;
+        font-weight: bold;
+      }
+      .rightPanel {
+        border: 1px solid #155ab4;
+          background: white;
+          margin-top: 50px;
+          border-radius: 6px;
+          font-size: 14px;
+          float: right;
+          width: 200px;
+          text-align: center;
+        }
+        .centerPanel {
+          position: fixed; /* or absolute */
+          top: 50%;
+          left: 50%;
+          /* bring your own prefixes */
+          transform: translate(-50%, -50%);
+          border: 5px solid #4c81c7;
+          background: white;
+          border-radius: 6px;
+          font-size: 14px;
+          width: 300px;
+          text-align: center;
+          box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+        }
+        .wrapper{
+          margin: 0px auto;
+          padding: 30px;
+          border-bottom: 5px solid #155ab4;
+        }
+    </style>
+    <title>twitter lite</title>
   </head>
   <body>
-    <div>
-      <p><a href="{{ url_for('login') }}">Login</a></p>
-      <p><a href="{{ url_for('signup') }}">Signup</a></p>
-      <p><a href="{{ url_for('feed') }}">After login</a></p>
-      <p><a href="{{ url_for('explore') }}">Explore</a></p>
+    <div class="wrapper">
+      <header>
+        twitter lite
+      </header>
+      <div class="centerPanel"> 
+        <h2><p><a href="{{ url_for('login') }}">Login</a></p></h2>
+        <h2><p><a href="{{ url_for('signup') }}">Signup</a></p></h2>
+        <h2><p><a href="{{ url_for('feed') }}">After login</a></p></h2>
+        <h2><p><a href="{{ url_for('explore') }}">Explore!</a></p></h2>
+      </div>
     </div>
   </body>
 </html>

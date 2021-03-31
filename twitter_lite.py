@@ -30,22 +30,52 @@ def explore():
                             WHERE u.name = t.reply_to_user
                             GROUP BY u.name
                             ORDER BY n_replies desc
-                            LIMIT 10'''
-
+                            LIMIT 100'''
+    
     cur.execute(pop_users_by_replies_q)
 
     pop_users_by_replies = cur.fetchall()
 
     con.commit()
     cur.close()
+
+    cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    trending_hashtags_q = '''SELECT links[s] AS tag, count(*) AS count
+                        FROM
+                        (SELECT id,generate_subscripts(link_types, 1) AS s, link_types, links
+                            FROM tweets_withoutwords_staging) AS foo
+                        WHERE link_types[s] = 'hashtag'
+                        GROUP BY links[s]
+                        ORDER BY count desc
+                        LIMIT 100'''
+
+    cur.execute(trending_hashtags_q)
+
+    trending_hashtags = cur.fetchall()
+
+    con.commit()
+    cur.close()
+
     con.close()
-    return render_template("explore.html", pop_users_by_replies = pop_users_by_replies)
+  
+    return render_template("explore.html", pop_users_by_replies = pop_users_by_replies, trending_hashtags = trending_hashtags)
 
 @app.route('/profile/<name>')
 def profile(name):
     con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='490023')
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
+    tweets_q = '''SELECT * 
+                FROM tweets_withoutwords AS t
+                WHERE user_name =''' + "\'" + name + "\'"
+    
+    cur.execute(tweets_q)
+
+    tweets = cur.fetchall()
+
+    con.commit()
+    cur.close()
+
     # followers ='''SELECT u.name, count(*) as count
     #                         FROM user_map as u1, user_list_w_newid as u_dash1, graph_cb, 
     #                         WHERE u.oldid = user_list_w_newid.oldid AND user_list_w_newid.newid = 
@@ -53,14 +83,10 @@ def profile(name):
     #                         ORDER BY n_replies desc
     #                         LIMIT 10'''
 
-    # cur.execute(pop_users_by_replies_q)
+    
 
-    # pop_users_by_replies = cur.fetchall()
-
-    con.commit()
-    cur.close()
     con.close()
-    return render_template("profile.html", name = name)
+    return render_template("profile.html", name = name, tweets = tweets)
 
 
 if __name__ == "__main__":
