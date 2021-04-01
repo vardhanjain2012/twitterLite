@@ -67,7 +67,9 @@ def profile(name):
     
     tweets_q = '''SELECT * 
                 FROM tweets_withoutwords AS t
-                WHERE user_name =''' + "\'" + name + "\'"
+                WHERE user_name = \'%s\'
+                ORDER BY t.date desc, t.time desc
+                '''%(name)
     
     cur.execute(tweets_q)
 
