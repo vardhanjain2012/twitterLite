@@ -44,32 +44,58 @@
         color: #77a4df;
         font-weight: bold;
       }
+
+      .centerPanel {
+          position: fixed; /* or absolute */
+          top: 55%;
+          left: 50%;
+          /* bring your own prefixes */
+          transform: translate(-50%, -50%);
+          border: 1px solid #4c81c7;
+          background: white;
+          border-radius: 5px;
+          font-size: 14px;
+          text-align: center;
+          overflow: auto;
+          height: 80%;
+          width: 50%;
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        }
+
       .rightPanel {
-        border: 1px solid #155ab4;
+        border: 3px solid #155ab4;
           background: white;
           margin-top: 50px;
           border-radius: 6px;
           font-size: 14px;
           float: right;
-          width: 200px;
-          height: 400px;
           text-align: center;
-          overflow-y:scroll;
-          overflow: auto;
           box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          width:20%;
         }
+        
         .leftPanel {
-        border: 1px solid #155ab4;
+        border: 3px solid #155ab4;
           background: white;
           margin-top: 50px;
           border-radius: 6px;
           font-size: 14px;
           float: left;
-          width: 250px;
-          height: 400px;
           text-align: center;
-          overflow: auto;
           box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          width:20%;
+        }
+
+        .box {
+          border: 0px solid #4c81c7;
+          background: white;
+          border-radius: 6px;
+          font-size: 14px;
+          text-align: center;
+          height:500px;
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          overflow: auto;
+          padding:10px;
         }
         /* width */        
         ::-webkit-scrollbar {
@@ -93,29 +119,46 @@
           padding: 30px;
           border-bottom: 5px solid #155ab4
         }
+        a.button {
+          text-align: right;
+          text-decoration: none;
+          color: initial;
+          font-size: 25px;
+          height: 23px;
+          font-family: "Lucida Console", "Courier New", monospace;
+          color: #77a4df;
+          font-weight: bold;
+        }
     </style>
     <title>Explore!</title>
 </head>
 <body>
   <div class="wrapper">
   <header>
-    twitter lite
+    <a href="/" class="button">twitter lite</a>
   </header>
-  <div class="rightPanel">
+  <div class="rightPanel" >
   <h1>Trending Users</h1>
+  <div class="box" >
       {% for user in pop_users_by_replies %}
       <p>
       <a href="{{ url_for('profile', name = user['name']) }}">@{{ user['name'] }}</a>
       </p>
       {% endfor %}
   </div>
+  </div>
   <div class="leftPanel">
   <h1>Trending Hashtags</h1>
+  <div class="box" >
       {% for hastags in trending_hashtags %}
       <p>
       #{{ hastags['tag'][13:] }}
       </p>
       {% endfor %}
+  </div>
+  </div>
+  <div class="centerPanel">
+    <h1>Trending Tweets</h1>
   </div>
   </div>
 </body>

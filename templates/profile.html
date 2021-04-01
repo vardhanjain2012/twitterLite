@@ -1,20 +1,3 @@
-<!-- <!DOCTYPE html>
-<html>
-  <head>
-    <title>Flask Template Example</title>
-  </head>
-  <body>
-    <div>
-      <p>Explore:</p>
-        <ul>
-            {% for users in pop_users_by_replies %}
-            <li>{{ users['name'] }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-  </body>
-</html> -->
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +21,6 @@
           height: 20px;
       }
       p {
-          padding: 0 24px;
           margin: 18px 0;
       }
       header{
@@ -77,12 +59,50 @@
           overflow: auto;
           padding:10px;
           box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          width:15%;
+        }
+        .box {
+          border: 1px solid #4c81c7;
+          background: white;
+          border-radius: 6px;
+          font-size: 14px;
+          text-align: center;
+          overflow: auto;
+          height:200px;
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          margin:10px;
+        }
+        /* width */        
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
         .wrapper{
           margin: 0px auto;
           padding: 30px;
           border-bottom: 5px solid #155ab4
         }
+        a.button {
+          text-align: right;
+          text-decoration: none;
+          color: initial;
+          font-size: 25px;
+          height: 23px;
+          font-family: "Lucida Console", "Courier New", monospace;
+          color: #77a4df;
+          font-weight: bold;
+      }
     </style>
     <title>{{name}}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}" />
@@ -90,12 +110,26 @@
 <body>
     <div class="wrapper">
         <header>
-            twitter lite
+          <a href="/" class="button">twitter lite</a>
         </header>
         <div class="leftPanel">
             <h2>{{name}}</h2>
-            <p>following:</p>
-            <p>followers:</p>
+            <div class="box">
+              <b><p><h3>followings: {{following_count}}</h3></p></b>
+              {% for following in followings %}
+              <p>
+                <a href="{{ url_for('profile', name = following['following_name']) }}">@{{ following['following_name'] }}</a>
+              </p>
+              {% endfor %}
+            </div>
+            <div class="box">
+              <b><p><h3>followers: {{follower_count}}</h3></p></b>
+              {% for follower in followers %}
+              <p>
+              <a href="{{ url_for('profile', name = follower['follower_name']) }}">@{{ follower['follower_name'] }}</a>
+              </p>
+              {% endfor %}
+            </div>
         </div>
         <div class="centerPanel">
           {% for tweet in tweets %}
