@@ -38,6 +38,23 @@ CREATE TABLE wordtable (
 \copy wordtable from 'data_dump/WordTable.txt';
 
 
+CREATE TABLE tweets_withoutwords_staging (
+    user_name text NOT NULL,
+    id bigint NOT NULL,
+    date date NOT NULL,
+    time time NOT NULL,
+    via text NOT NULL,
+    retweet_from text NOT NULL,
+    reply_to_user text NOT NULL,
+    reply_to_tweet bigint NOT NULL,
+    content int [] NOT NULL,
+    number_of_link_in_tweet int,
+    link_types text [],
+    links text []
+);
+
+\copy tweets_withoutwords_staging from 'data_dump/Tweets-withoutwords/2010_10_14/tweet_result_0_cleaned.txt';
+
 CREATE TABLE tweets_withoutwords (
     user_name text NOT NULL,
     id bigint NOT NULL,
@@ -46,7 +63,7 @@ CREATE TABLE tweets_withoutwords (
     via text NOT NULL,
     retweet_from text NOT NULL,
     reply_to_user text NOT NULL,
-    reply_to_tweet text NOT NULL,
+    reply_to_tweet bigint NOT NULL,
     content int [] NOT NULL,
     number_of_link_in_tweet int,
     link_types text [],
@@ -54,4 +71,10 @@ CREATE TABLE tweets_withoutwords (
     constraint tweets_withoutwords_key primary key (id)
 );
 
-\copy tweets_withoutwords from 'data_dump/Tweets-withoutwords/2010_10_14/tweet_result_0_cleaned.txt' delimiter ';';
+INSERT INTO tweets_withoutwords
+    SELECT *
+    FROM tweets_withoutwords_staging
+ON CONFLICT DO NOTHING
+;
+
+DROP TABLE tweets_withoutwords_staging;
