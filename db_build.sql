@@ -5,7 +5,7 @@ CREATE TABLE user_list_w_newid (
     unique (oldid)
 );
 
-\copy user_list_w_newid from 'twitter_network/user_list_w_newid.txt' delimiter ' ';
+\copy user_list_w_newid from 'data_dump/twitter_network/user_list_w_newid.txt' delimiter ' ';
 
 
 CREATE TABLE user_map (
@@ -14,7 +14,7 @@ CREATE TABLE user_map (
     constraint user_map_key primary key (oldid)
 );
 
-\copy user_map from 'twitter_network/user_map.txt' delimiter ' ';
+\copy user_map from 'data_dump/twitter_network/user_map.txt' delimiter ' ';
 
 
 CREATE TABLE graph_cb (
@@ -24,7 +24,7 @@ CREATE TABLE graph_cb (
     constraint graph_cb_key primary key (follower_newid, following_newid)
 );
 
-\copy graph_cb from 'twitter_network/graph_cb.txt' delimiter ' ';
+\copy graph_cb from 'data_dump/twitter_network/graph_cb.txt' delimiter ' ';
 
 
 CREATE TABLE wordtable (
@@ -35,7 +35,7 @@ CREATE TABLE wordtable (
     unique (word)
 );
 
-\copy wordtable from 'WordTable.txt';
+\copy wordtable from 'data_dump/WordTable.txt';
 
 
 CREATE TABLE tweets_withoutwords (
@@ -54,4 +54,4 @@ CREATE TABLE tweets_withoutwords (
     constraint tweets_withoutwords_key primary key (id)
 );
 
-\copy tweets_withoutwords from 'Tweets-withoutwords/2010_10_14/tweet_result_0_cleaned.txt' delimiter ';';
+\copy tweets_withoutwords from 'data_dump/Tweets-withoutwords/2010_10_14/tweet_result_0_cleaned.txt' delimiter ';';
