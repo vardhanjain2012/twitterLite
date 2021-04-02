@@ -26,7 +26,7 @@ def hello_world():
 @app.route('/feed/<username>')
 def feed(username):
 	cur = con.cursor()
-	cur.execute("SELECT * FROM flights WHERE carrier=%s", [username])
+	cur.execute("SELECT * FROM tweets_withoutwords WHERE user_name=%s", [username])
 	items = cur.fetchall()
 	cur.close()
 	return render_template("feed.html", users=items)
