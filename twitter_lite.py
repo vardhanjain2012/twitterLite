@@ -10,12 +10,12 @@ def signal_handler(sig, frame):
 
 
 # for Vardhan
-con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='MANGO')
-app = Flask(__name__)
+# con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='MANGO')
+# app = Flask(__name__)
 
 # for Ashish
 # con = psycopg2.connect(dbname='assignment2', user='postgres', host='localhost', password='490023')
-# app = Flask(__name__, static_folder='../static')
+app = Flask(__name__)
 
 
 
@@ -25,11 +25,13 @@ def hello_world():
 
 @app.route('/feed/<username>')
 def feed(username):
-	cur = con.cursor()
-	cur.execute("SELECT * FROM tweets_withoutwords WHERE user_name=%s", [username])
-	items = cur.fetchall()
-	cur.close()
-	return render_template("feed.html", users=items)
+    con = psycopg2.connect(dbname='assignment2', user='postgres', host='localhost', password='490023')
+    cur = con.cursor()
+    cur.execute("SELECT * FROM tweets_withoutwords WHERE user_name=%s", [username])
+    items = cur.fetchall()
+    cur.close()
+    con.close()
+    return render_template("feed.html", users=items)
 
 @app.route('/handle_data', methods=['POST'])
 def handle_data_signup():
@@ -188,6 +190,6 @@ def profile(name):
 
 
 if __name__ == "__main__":
-	signal(SIGINT, handler)
+	# signal(signal.SIGINT, handler)
 	app.run(debug=True)
 
