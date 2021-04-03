@@ -129,25 +129,6 @@
         <header>
           <a href="/" class="button">twitter lite</a>
         </header>
-        <div class="leftPanel">
-            <h2>{{name}}</h2>
-            <div class="box">
-              <b><p><h3>followings: {{following_count}}</h3></p></b>
-              {% for following in followings %}
-              <p>
-                <a href="{{ url_for('profile', name = following['following_name']) }}">@{{ following['following_name'] }}</a>
-              </p>
-              {% endfor %}
-            </div>
-            <div class="box">
-              <b><p><h3>followers: {{follower_count}}</h3></p></b>
-              {% for follower in followers %}
-              <p>
-              <a href="{{ url_for('profile', name = follower['follower_name']) }}">@{{ follower['follower_name'] }}</a>
-              </p>
-              {% endfor %}
-            </div>
-        </div>
         <div class="centerPanel">
           <header>
            tweets
