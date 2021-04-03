@@ -152,7 +152,7 @@
   <div class="box" >
       {% for hastags in trending_hashtags %}
       <p>
-      <a href="{{ url_for('trend', hash = hastags['tag']) }}">#{{ hastags['tag'][13:] }}
+      <a href="{{ url_for('trend', hash = hastags['tag'][13:]) }}">#{{ hastags['tag'][13:] }}
       </p>
       {% endfor %}
   </div>

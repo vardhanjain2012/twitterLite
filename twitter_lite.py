@@ -9,13 +9,9 @@ def signal_handler(sig, frame):
 	sys.exit(0)
 
 
-# for Vardhan
-con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='MANGO')
-app = Flask(__name__)
 
-# for Ashish
-# con = psycopg2.connect(dbname='assignment2', user='postgres', host='localhost', password='490023')
-# app = Flask(__name__, static_folder='../static')
+password = "490023"
+app = Flask(__name__)
 
 
 
@@ -25,7 +21,7 @@ def hello_world():
 
 @app.route('/feed/<name>')
 def feed(name):
-	con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='490023')
+    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password=password)
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     tweets_q = '''SELECT * 
@@ -151,24 +147,23 @@ def feed(name):
     con.close()
     return render_template("feed.html", name = name, tweets = tweets, followers = followers, follower_count = len(followers), followings = followings, following_count = len(followings))
 
-
 @app.route('/handle_data', methods=['POST'])
 def handle_data_signup():
-	username = request.form['email']
+	name = request.form['email']
 	psw = request.form['psw']
 	pswrepeat = request.form['psw-repeat']
-	return redirect(url_for('feed', username=username))
+	return redirect(url_for('feed', name=name))
 
 @app.route('/handle_data', methods=['POST'])
 def handle_data_login():
-	username = request.form['email']
+	name = request.form['email']
 	psw = request.form['psw']
-	return redirect(url_for('feed', username=username))
+	return redirect(url_for('feed', name=name))
 
 #TODO: make it posonalized for user and use tweet times
 @app.route('/explore')
 def explore():
-    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='490023')
+    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password=password)
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     pop_users_by_replies_q ='''SELECT u.name, count(*) as n_replies
@@ -227,7 +222,7 @@ def explore():
 
 @app.route('/profile/<name>')
 def profile(name):
-    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='490023')
+    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password=password)
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     tweets_q = '''SELECT * 
@@ -326,18 +321,19 @@ def profile(name):
     con.close()
     return render_template("profile.html", name = name, tweets = tweets, followers = followers, follower_count = len(followers), followings = followings, following_count = len(followings))
 
+
 @app.route('/trend/<hash>')
 def trend(hash):
-	con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='490023')
+    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password=password)
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    
+    print("testing", hash)
     tweets_q = '''SELECT *
 					FROM
 					(SELECT *,generate_subscripts(link_types, 1) AS s
 						FROM tweets_withoutwords) AS foo
 					WHERE link_types[s] = 'hashtag' AND links[s]=\'%s\'
 					ORDER BY foo.date desc, foo.time desc
-                '''%(hash)
+                '''%("/search?q=%23"+hash)
     
     cur.execute(tweets_q)
 
@@ -351,6 +347,6 @@ def trend(hash):
     
 
 if __name__ == "__main__":
-	signal(SIGINT, handler)
+	# signal(signal.SIGINT, handler)
 	app.run(debug=True)
 
