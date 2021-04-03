@@ -1,53 +1,50 @@
 import psycopg2, psycopg2.extras
 from flask import Flask, render_template, request, redirect, url_for
-import signal
 import sys
-
-def signal_handler(sig, frame):
-	con.close()
-	print('You pressed Ctrl+C!')
-	sys.exit(0)
 
 
 # for Vardhan
-con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='MANGO')
 app = Flask(__name__)
+password='MANGO'
 
 # for Ashish
-# con = psycopg2.connect(dbname='assignment2', user='postgres', host='localhost', password='490023')
 # app = Flask(__name__, static_folder='../static')
+# password='490023' 
 
 
 
 @app.route('/')
 def hello_world():
+    print("kk")
     return render_template("entry.html")
 
 @app.route('/feed/<username>')
 def feed(username):
-	cur = con.cursor()
-	cur.execute("SELECT * FROM tweets_withoutwords WHERE user_name=%s", [username])
-	items = cur.fetchall()
-	cur.close()
-	return render_template("feed.html", users=items)
+    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password=password)
+    cur = con.cursor()
+    cur.execute("SELECT * FROM tweets_withoutwords WHERE user_name=%s", [username])
+    items = cur.fetchall()
+    cur.close()
+    con.close()
+    return render_template("feed.html", users=items)
 
-@app.route('/handle_data', methods=['POST'])
+@app.route('/handle_data_signup', methods=['POST'])
 def handle_data_signup():
-	username = request.form['email']
-	psw = request.form['psw']
-	pswrepeat = request.form['psw-repeat']
-	return redirect(url_for('feed', username=username))
+    username = request.form['email']
+    psw = request.form['psw']
+    pswrepeat = request.form['psw-repeat']
+    return redirect(url_for('feed', username=username))
 
-@app.route('/handle_data', methods=['POST'])
+@app.route('/handle_data_login', methods=['POST'])
 def handle_data_login():
-	username = request.form['email']
-	psw = request.form['psw']
-	return redirect(url_for('feed', username=username))
+    username = request.form['uname']
+    psw = request.form['psw']
+    return redirect(url_for('feed', username=username))
 
 #TODO: make it posonalized for user and use tweet times
 @app.route('/explore')
 def explore():
-    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='490023')
+    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password=password)
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     pop_users_by_replies_q ='''SELECT u.name, count(*) as n_replies
@@ -68,7 +65,7 @@ def explore():
     trending_hashtags_q = '''SELECT links[s] AS tag, count(*) AS count
                         FROM
                         (SELECT id,generate_subscripts(link_types, 1) AS s, link_types, links
-                            FROM tweets_withoutwords_staging) AS foo
+                            FROM tweets_withoutwords) AS foo
                         WHERE link_types[s] = 'hashtag'
                         GROUP BY links[s]
                         ORDER BY count desc
@@ -87,7 +84,7 @@ def explore():
 
 @app.route('/profile/<name>')
 def profile(name):
-    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='490023')
+    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password=password)
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     tweets_q = '''SELECT * 
@@ -188,6 +185,5 @@ def profile(name):
 
 
 if __name__ == "__main__":
-	signal(SIGINT, handler)
 	app.run(debug=True)
 

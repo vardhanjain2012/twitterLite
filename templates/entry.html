@@ -175,12 +175,7 @@
     <header>
       twitter lite
     </header>
-    <div class="centerPanel"> 
-      <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
-
-      <button onclick="document.getElementById('id02').style.display='block'" style="width:auto;">Signup</button>
-
-      <div id="id02" class="modal">
+    <div id="id02" class="modal">
         <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">&times;</span>
         <form class="modal-content" action="{{ url_for('handle_data_signup') }}" method="post">
           <div class="container">
@@ -209,8 +204,7 @@
           </div>
         </form>
       </div>
-
-      <div id="id01" class="modal">
+    <div id="id01" class="modal">
         
         <form class="modal-content animate" action="{{ url_for('handle_data_login') }}" method="post">
           <div class="imgcontainer">
@@ -235,7 +229,15 @@
             <span class="psw">Forgot <a href="#">password?</a></span>
           </div>
         </form>
-    </div>
+      </div>
+    <div class="centerPanel"> 
+      <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
+
+      <button onclick="document.getElementById('id02').style.display='block'" style="width:auto;">Signup</button>
+
+      
+
+      
   </div>
 
       
