@@ -307,6 +307,109 @@ def profile(name):
     con.close()
     return render_template("profile.html", name = name, tweets = tweets, followers = followers, follower_count = len(followers), followings = followings, following_count = len(followings))
 
+@app.route('/trend/<name>/<hash>')
+def trend(name,hash):
+con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='490023')
+    cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    tweets_q = '''SELECT *
+					FROM
+					(SELECT *,generate_subscripts(link_types, 1) AS s
+						FROM tweets_withoutwords) AS foo
+					WHERE link_types[s] = 'hashtag' AND links[s]=\'%s\'
+					ORDER BY foo.date desc, foo.time desc
+                '''%(hash)
+    
+    cur.execute(tweets_q)
+
+    tweets = cur.fetchall()
+
+    con.commit()
+    cur.close()
+
+    cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    followers_q = '''
+                SELECT user_map.name as follower_name
+                FROM 
+                    (
+                    SELECT user_list_w_newid.oldid AS follower_oldid
+                    FROM
+                        (
+                        SELECT graph_cb.follower_newid AS follower_newid
+                        FROM
+                            (
+                            SELECT user_list_w_newid.newid as newid
+                            FROM
+                                (
+                                SELECT oldid 
+                                FROM user_map
+                                WHERE name = \'%s\'
+                                ) AS foo,
+                                user_list_w_newid
+                            WHERE foo.oldid = user_list_w_newid.oldid
+                            ) AS bar,
+                            graph_cb
+                        WHERE graph_cb.following_newid = bar.newid
+                        ) as foobar1,
+                        user_list_w_newid
+                    WHERE foobar1.follower_newid = user_list_w_newid.newid
+                    ) AS foobar2,
+                    user_map
+                WHERE user_map.oldid = follower_oldid
+                ;
+                ''' %(name)
+
+    cur.execute(followers_q)
+
+    followers = cur.fetchall()
+
+    con.commit()
+    cur.close()
+
+    cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    followings_q = '''
+                SELECT user_map.name as following_name
+                FROM 
+                    (
+                    SELECT user_list_w_newid.oldid AS following_oldid
+                    FROM
+                        (
+                        SELECT graph_cb.following_newid AS following_newid
+                        FROM
+                            (
+                            SELECT user_list_w_newid.newid as newid
+                            FROM
+                                (
+                                SELECT oldid 
+                                FROM user_map
+                                WHERE name = \'%s\'
+                                ) AS foo,
+                                user_list_w_newid
+                            WHERE foo.oldid = user_list_w_newid.oldid
+                            ) AS bar,
+                            graph_cb
+                        WHERE graph_cb.follower_newid = bar.newid
+                        ) as foobar1,
+                        user_list_w_newid
+                    WHERE foobar1.following_newid = user_list_w_newid.newid
+                    ) AS foobar2,
+                    user_map
+                WHERE user_map.oldid = following_oldid
+                ;
+                ''' %(name)
+
+    cur.execute(followings_q)
+
+    followings = cur.fetchall()
+
+    con.commit()
+    cur.close()
+
+    con.close()
+    return render_template("trending.html", name = name, tweets = tweets, followers = followers, follower_count = len(followers), followings = followings, following_count = len(followings))
+
 
 if __name__ == "__main__":
 	signal(SIGINT, handler)
