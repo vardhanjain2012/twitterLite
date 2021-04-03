@@ -129,6 +129,18 @@
           color: #77a4df;
           font-weight: bold;
         }
+        .tweet {
+          border: 1px solid #4c81c7;
+          background: white;
+          border-radius: 6px;
+          font-size: 14px;
+          text-align: left;
+          overflow: auto;
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          margin:5px;
+          word-spacing: 3px;
+          letter-spacing: 1px;
+        }
     </style>
     <title>Explore!</title>
 </head>
@@ -152,13 +164,24 @@
   <div class="box" >
       {% for hastags in trending_hashtags %}
       <p>
-      #{{ hastags['tag'][13:] }}
+      <a href="{{ url_for('trend', hash = hastags['tag'][13:]) }}">#{{ hastags['tag'][13:] }} </a>
       </p>
       {% endfor %}
   </div>
   </div>
   <div class="centerPanel">
-    <h1>Trending Tweets</h1>
+    <h1>
+	   Popular tweets
+	  </h1>
+	  {% for tweet in tweets %}
+	  <div class = "tweet">
+		<h4><a href="{{ url_for('profile', name = tweet['user_name']) }}">@{{ tweet['user_name'] }}</a> <span class="time">{{tweet['date']}}</span> <span class="time">{{tweet['time']}}</span> </h4>
+		<p>
+		  {{tweet['content']}}
+		</p>
+		<span class="time">{{tweet['via']}}</span>
+	  </div>
+	  {% endfor %}
   </div>
   </div>
 </body>

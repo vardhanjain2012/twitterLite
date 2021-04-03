@@ -121,7 +121,7 @@
           color: rgb(97, 95, 95);
         }
     </style>
-    <title>{{name}}</title>
+    <title>Trending Hashtag</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}" />
 </head>
 <body>
@@ -129,29 +129,9 @@
         <header>
           <a href="/" class="button">twitter lite</a>
         </header>
-        <div class="leftPanel">
-            <h2>{{name}}</h2>
-            <div class="box">
-              <b><p><h3>my followings: {{following_count}}</h3></p></b>
-              {% for following in followings %}
-              <p>
-                <a href="{{ url_for('profile', name = following['following_name']) }}">@{{ following['following_name'] }}</a>
-              </p>
-              {% endfor %}
-            </div>
-            <div class="box">
-              <b><p><h3>my followers: {{follower_count}}</h3></p></b>
-              {% for follower in followers %}
-              <p>
-              <a href="{{ url_for('profile', name = follower['follower_name']) }}">@{{ follower['follower_name'] }}</a>
-              </p>
-              {% endfor %}
-            </div>
-            <b><p><h3><a href="{{ url_for('explore') }}"> Explore! </a></h3></p></b>
-        </div>
         <div class="centerPanel">
           <header>
-           my feed 
+           tweets
           </header>
           {% for tweet in tweets %}
           <div class = "tweet">
