@@ -158,7 +158,18 @@
   </div>
   </div>
   <div class="centerPanel">
-    <h1>Trending Tweets</h1>
+    <header>
+	   tweets
+	  </header>
+	  {% for tweet in tweets %}
+	  <div class = "tweet">
+		<h4><a href="{{ url_for('profile', name = tweet['user_name']) }}">@{{ tweet['user_name'] }}</a> <span class="time">{{tweet['date']}}</span> <span class="time">{{tweet['time']}}</span> </h4>
+		<p>
+		  {{tweet['content']}}
+		</p>
+		<span class="time">{{tweet['via']}}</span>
+	  </div>
+	  {% endfor %}
   </div>
   </div>
 </body>

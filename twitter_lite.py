@@ -23,8 +23,8 @@ app = Flask(__name__)
 def hello_world():
     return render_template("entry.html")
 
-@app.route('/feed/<username>')
-def feed(username):
+@app.route('/feed/<name>')
+def feed(name):
 	con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='490023')
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
@@ -200,11 +200,30 @@ def explore():
     trending_hashtags = cur.fetchall()
 
     con.commit()
+	
     cur.close()
+	    cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    tweets_q = '''SELECT * 
+				FROM (SELECT reply_to_tweet as f, COUNT(*) 
+					FROM tweets_withoutwords AS t
+					GROUP BY reply_to_tweet
+					ORDER BY COUNT(*) DESC
+					LIMIT 100) as foo, tweets_withoutwords AS t
+				WHERE foo.f=t.id
+				ORDER BY count DESC, t.date desc, t.time desc
+                '''
+	
+    cur.execute(tweets_q)
 
+    tweets = cur.fetchall()
+
+    con.commit()
+    cur.close()
+	
     con.close()
   
-    return render_template("explore.html", pop_users_by_replies = pop_users_by_replies, trending_hashtags = trending_hashtags)
+    return render_template("explore.html", tweets = tweets, pop_users_by_replies = pop_users_by_replies, trending_hashtags = trending_hashtags)
 
 @app.route('/profile/<name>')
 def profile(name):
@@ -309,7 +328,7 @@ def profile(name):
 
 @app.route('/trend/<hash>')
 def trend(hash):
-con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='490023')
+	con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password='490023')
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     tweets_q = '''SELECT *
@@ -323,7 +342,7 @@ con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost',
     cur.execute(tweets_q)
 
     tweets = cur.fetchall()
-
+	
     con.commit()
     cur.close()
 
