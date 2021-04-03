@@ -197,7 +197,7 @@ def explore():
     con.commit()
 	
     cur.close()
-	    cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     tweets_q = '''SELECT * 
 				FROM (SELECT reply_to_tweet as f, COUNT(*) 
