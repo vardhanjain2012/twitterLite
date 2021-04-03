@@ -303,18 +303,18 @@ def profile(name):
     return render_template("profile.html", name = name, tweets = tweets, followers = followers, follower_count = len(followers), followings = followings, following_count = len(followings))
 
 
-@app.route('/trend/<name>/<hash>')
-def trend(name,hash):
+@app.route('/trend/<hash>')
+def trend(hash):
     con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password=password)
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    
+    print("testing", hash)
     tweets_q = '''SELECT *
 					FROM
 					(SELECT *,generate_subscripts(link_types, 1) AS s
 						FROM tweets_withoutwords) AS foo
 					WHERE link_types[s] = 'hashtag' AND links[s]=\'%s\'
 					ORDER BY foo.date desc, foo.time desc
-                '''%(hash)
+                '''%("/search?q=%23"+hash)
     
     cur.execute(tweets_q)
 
