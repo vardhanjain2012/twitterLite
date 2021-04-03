@@ -29,13 +29,13 @@ def feed(username):
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     tweets_q = '''SELECT * 
-				FROM (SELECT user_map.name as follower_name
+				FROM (SELECT user_map.name as following_name
 					FROM 
 						(
-						SELECT user_list_w_newid.oldid AS follower_oldid
+						SELECT user_list_w_newid.oldid AS following_oldid
 						FROM
 							(
-							SELECT graph_cb.follower_newid AS follower_newid
+							SELECT graph_cb.following_newid AS following_newid
 							FROM
 								(
 								SELECT user_list_w_newid.newid as newid
@@ -49,15 +49,15 @@ def feed(username):
 								WHERE foo.oldid = user_list_w_newid.oldid
 								) AS bar,
 								graph_cb
-							WHERE graph_cb.following_newid = bar.newid
+							WHERE graph_cb.follower_newid = bar.newid
 							) as foobar1,
 							user_list_w_newid
-						WHERE foobar1.follower_newid = user_list_w_newid.newid
+						WHERE foobar1.following_newid = user_list_w_newid.newid
 						) AS foobar2,
 						user_map
-					WHERE user_map.oldid = follower_oldid) AS p, 
+					WHERE user_map.oldid = following_oldid) AS p, 
 				tweets_withoutwords AS t
-                WHERE t.user_name = follower_name
+                WHERE t.user_name = following_name
                 ORDER BY t.date desc, t.time desc
                 '''%(name)
     
