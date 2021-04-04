@@ -1,6 +1,7 @@
 import psycopg2, psycopg2.extras
 from flask import Flask, render_template, request, redirect, url_for
 import sys
+import time
 
 
 dbname = 'group_32'
@@ -266,8 +267,8 @@ def explore():
   
     return render_template("explore.html", tweets = tweets, pop_users_by_replies = pop_users_by_replies, trending_hashtags = trending_hashtags)
 
-@app.route('/profile/<name>')
-def profile(name):
+@app.route('/profile/<name>/<viewer>')
+def profile(name, viewer):
     con = psycopg2.connect(dbname=dbname, user='postgres', host=host, password=password)
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
@@ -364,9 +365,89 @@ def profile(name):
     con.commit()
     cur.close()
 
-    con.close()
-    return render_template("profile.html", name = name, tweets = tweets, followers = followers, follower_count = len(followers), followings = followings, following_count = len(followings))
+    cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
+    followings_q = '''
+                SELECT user_map.name as following_name
+                FROM 
+                    (
+                    SELECT user_list_w_newid.oldid AS following_oldid
+                    FROM
+                        (
+                        SELECT graph_cb.following_newid AS following_newid
+                        FROM
+                            (
+                            SELECT user_list_w_newid.newid as newid
+                            FROM
+                                (
+                                SELECT oldid 
+                                FROM user_map
+                                WHERE name = \'%s\'
+                                ) AS foo,
+                                user_list_w_newid
+                            WHERE foo.oldid = user_list_w_newid.oldid
+                            ) AS bar,
+                            graph_cb
+                        WHERE graph_cb.follower_newid = bar.newid
+                        ) as foobar1,
+                        user_list_w_newid
+                    WHERE foobar1.following_newid = user_list_w_newid.newid
+                    ) AS foobar2,
+                    user_map
+                WHERE user_map.oldid = following_oldid
+                ;
+                ''' %(viewer)
+
+    cur.execute(followings_q)
+
+    followingsViewer = cur.fetchall()
+
+    con.commit()
+    cur.close()
+
+    con.close()
+
+    print(followingsViewer)
+
+    isPresent = False
+    if([name] in followingsViewer):
+        isPresent=True
+    return render_template("profile.html", name = name, tweets = tweets, followers = followers, follower_count = len(followers), followings = followings, following_count = len(followings), viewer=viewer, isPresent=isPresent)
+
+@app.route('/handle_follow/<name>/<viewer>')
+def handle_follow(name, viewer):
+    con = psycopg2.connect(dbname=dbname, user='postgres', host=host, password=password)
+    cur = con.cursor()
+    insertOne ='''INSERT INTO graph_cb(follower_newid, following_newid, timestamp) VALUES(
+        (SELECT newid 
+        FROM user_list_w_newid NATURAL JOIN user_map
+        WHERE user_map.name=%s), 
+        (SELECT newid 
+        FROM user_list_w_newid NATURAL JOIN user_map
+        WHERE user_map.name=%s), %s)'''
+    ts = time.time()
+    cur.execute(insertOne, [viewer, name, int(ts)])
+    con.commit()
+    cur.close()
+    con.close()
+    return redirect(url_for('profile', name=name, viewer=viewer))
+
+@app.route('/handle_unfollow/<name>/<viewer>')
+def handle_unfollow(name, viewer):
+    con = psycopg2.connect(dbname=dbname, user='postgres', host=host, password=password)
+    cur = con.cursor()
+    removeOne ='''DELETE FROM graph_cb WHERE
+        (follower_newid=(SELECT newid 
+        FROM user_list_w_newid NATURAL JOIN user_map
+        WHERE user_map.name=%s)) AND
+        (following_newid=(SELECT newid 
+        FROM user_list_w_newid NATURAL JOIN user_map
+        WHERE user_map.name=%s))'''
+    cur.execute(removeOne, [viewer, name])
+    con.commit()
+    cur.close()
+    con.close()
+    return redirect(url_for('profile', name=name, viewer=viewer))
 
 @app.route('/trend/<hash>')
 def trend(hash):

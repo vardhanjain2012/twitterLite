@@ -131,11 +131,16 @@
         </header>
         <div class="leftPanel">
             <h2>{{name}}</h2>
+            {% if isPresent %}
+              <h3>Following <a href="{{ url_for('handle_unfollow', name=name, viewer=viewer)}}">Unfollow</a></h3>
+            {% else %}
+              <h3><a href="{{ url_for('handle_follow', name=name, viewer=viewer)}}">Follow</a></h3>
+            {% endif %}
             <div class="box">
               <b><p><h3>followings: {{following_count}}</h3></p></b>
               {% for following in followings %}
               <p>
-                <a href="{{ url_for('profile', name = following['following_name']) }}">@{{ following['following_name'] }}</a>
+                <a href="{{ url_for('profile', name = following['following_name'], viewer = viewer) }}">@{{ following['following_name'] }}</a>
               </p>
               {% endfor %}
             </div>
@@ -143,7 +148,7 @@
               <b><p><h3>followers: {{follower_count}}</h3></p></b>
               {% for follower in followers %}
               <p>
-              <a href="{{ url_for('profile', name = follower['follower_name']) }}">@{{ follower['follower_name'] }}</a>
+              <a href="{{ url_for('profile', name = follower['follower_name'], viewer = viewer) }}">@{{ follower['follower_name'] }}</a>
               </p>
               {% endfor %}
             </div>
@@ -154,7 +159,7 @@
           </header>
           {% for tweet in tweets %}
           <div class = "tweet">
-            <h4><a href="{{ url_for('profile', name = tweet['user_name']) }}">@{{ tweet['user_name'] }}</a> <span class="time">{{tweet['date']}}</span> <span class="time">{{tweet['time']}}</span> </h4>
+            <h4><a href="{{ url_for('profile', name = tweet['user_name'], viewer = viewer) }}">@{{ tweet['user_name'] }}</a> <span class="time">{{tweet['date']}}</span> <span class="time">{{tweet['time']}}</span> </h4>
             <p>
               {{tweet['content']}}
             </p>
