@@ -1,6 +1,6 @@
 CREATE TABLE user_list_w_newid (
-    newid int NOT NULL,
-    oldid int NOT NULL,
+    newid bigint NOT NULL,
+    oldid bigint NOT NULL,
     constraint user_list_w_newid_key primary key (newid),
     unique (oldid)
 );
@@ -9,18 +9,19 @@ CREATE TABLE user_list_w_newid (
 
 
 CREATE TABLE user_map (
-    oldid int NOT NULL,
+    oldid bigint NOT NULL,
     name text NOT NULL,
     constraint user_map_key primary key (oldid)
+    unique(oldid)
 );
 
 \copy user_map from 'data_dump/twitter_network/user_map.txt' delimiter ' ';
 
 
 CREATE TABLE graph_cb (
-    follower_newid int NOT NULL,
-    following_newid int NOT NULL,
-    timestamp int NOT NULL,
+    follower_newid bigint NOT NULL,
+    following_newid bigint NOT NULL,
+    timestamp bigint NOT NULL,
     constraint graph_cb_key primary key (follower_newid, following_newid)
 );
 
@@ -28,8 +29,8 @@ CREATE TABLE graph_cb (
 
 
 CREATE TABLE wordtable (
-    id int NOT NULL,
-    unknown int NOT NULL,
+    id bigint NOT NULL,
+    unknown bigint NOT NULL,
     word text NOT NULL,
     constraint wordtable_key primary key (id),
     unique (word)
@@ -47,8 +48,8 @@ CREATE TABLE tweets_withoutwords_staging (
     retweet_from text NOT NULL,
     reply_to_user text NOT NULL,
     reply_to_tweet bigint NOT NULL,
-    content int [] NOT NULL,
-    number_of_link_in_tweet int,
+    content bigint [] NOT NULL,
+    number_of_link_in_tweet bigint,
     link_types text [],
     links text []
 );
@@ -64,8 +65,8 @@ CREATE TABLE tweets_withoutwords (
     retweet_from text NOT NULL,
     reply_to_user text NOT NULL,
     reply_to_tweet bigint NOT NULL,
-    content int [] NOT NULL,
-    number_of_link_in_tweet int,
+    content bigint [] NOT NULL,
+    number_of_link_in_tweet bigint,
     link_types text [],
     links text [],
     constraint tweets_withoutwords_key primary key (id)

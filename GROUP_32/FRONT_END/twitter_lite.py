@@ -8,14 +8,6 @@ host = '10.17.10.70'
 password = 'rdbm5OZCxcpS9'
 app = Flask(__name__)
 
-# for Vardhan
-# app = Flask(__name__)
-# password='MANGO'
-
-# for Ashish
-# app = Flask(__name__, static_folder='../static')
-# password='490023' 
-
 @app.route('/')
 def hello_world():
     return render_template("entry.html")
@@ -150,15 +142,68 @@ def feed(name):
 
 @app.route('/handle_data_signup', methods=['POST'])
 def handle_data_signup():
-	name = request.form['email']
-	psw = request.form['psw']
-	pswrepeat = request.form['psw-repeat']
-	return redirect(url_for('feed', name=name))
+    name = request.form['uname']
+    con = psycopg2.connect(dbname=dbname, user='postgres', host=host, password=password)
+    cur = con.cursor()
+    countUsername ='''SELECT COUNT(*) as count
+                            FROM user_map 
+                            WHERE name = %s'''
+    cur.execute(countUsername, [name])
+    numUsernames = cur.fetchall()[0][0]
+    cur.close()
+    con.close()
+    if numUsernames==1:
+        return render_template("entry.html", message="Username not available, signup again with a new one!")
+    con = psycopg2.connect(dbname=dbname, user='postgres', host=host, password=password)
+    cur = con.cursor()
+    maxid ='''SELECT MAX(oldid) as maxid
+                            FROM user_map'''
+    cur.execute(maxid)
+    maxoldid = cur.fetchall()[0][0]
+    cur.close()
+    con.close()
+    print(maxoldid)
+    con = psycopg2.connect(dbname=dbname, user='postgres', host=host, password=password)
+    cur = con.cursor()
+    maxid ='''SELECT MAX(newid) as maxid
+                            FROM user_list_w_newid'''
+    cur.execute(maxid)
+    maxnewid = cur.fetchall()[0][0]
+    cur.close()
+    con.close()
+    print(maxnewid)
+
+    con = psycopg2.connect(dbname=dbname, user='postgres', host=host, password=password)
+    cur = con.cursor()
+    insertOne ='''INSERT INTO user_map(oldid, name) VALUES(%s, %s)'''
+    cur.execute(insertOne, [maxoldid+1, name])
+    con.commit()
+    cur.close()
+    con.close()
+
+    con = psycopg2.connect(dbname=dbname, user='postgres', host=host, password=password)
+    cur = con.cursor()
+    insertOne ='''INSERT INTO user_list_w_newid(newid, oldid) VALUES(%s, %s)'''
+    cur.execute(insertOne, [maxnewid+1, maxoldid+1])
+    con.commit()
+    cur.close()
+    con.close()
+    return redirect(url_for('feed', name=name))
 
 @app.route('/handle_data_login', methods=['POST'])
 def handle_data_login():
     name = request.form['uname']
-    psw = request.form['psw']
+    con = psycopg2.connect(dbname=dbname, user='postgres', host=host, password=password)
+    cur = con.cursor()
+    countUsername ='''SELECT COUNT(*) as count
+                            FROM user_map 
+                            WHERE name = %s'''
+    cur.execute(countUsername, [name])
+    numUsernames = cur.fetchall()[0][0]
+    cur.close()
+    con.close()
+    if numUsernames==0:
+        return render_template("entry.html", message="Invalid username, try again!")
     return redirect(url_for('feed', name=name))
 
 #TODO: make it posonalized for user and use tweet times

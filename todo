@@ -1,3 +1,4 @@
 todo
-6)feed - same as profile add tweets of following
-7)new user and new tweet add data
+7)new tweet add data
+8)create indexes, views etc. if required
+9)replaced int to bigint
