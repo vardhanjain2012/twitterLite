@@ -3,9 +3,14 @@ from flask import Flask, render_template, request, redirect, url_for
 import sys
 
 
-# for Vardhan
+dbname = 'group_32'
+host = '10.17.10.70'
+password = 'rdbm5OZCxcpS9'
 app = Flask(__name__)
-password='MANGO'
+
+# for Vardhan
+# app = Flask(__name__)
+# password='MANGO'
 
 # for Ashish
 # app = Flask(__name__, static_folder='../static')
@@ -17,7 +22,7 @@ def hello_world():
 
 @app.route('/feed/<name>')
 def feed(name):
-    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password=password)
+    con = psycopg2.connect(dbname=dbname, user='postgres', host=host, password=password)
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     tweets_q = '''SELECT * 
@@ -153,14 +158,13 @@ def handle_data_signup():
 @app.route('/handle_data_login', methods=['POST'])
 def handle_data_login():
     name = request.form['uname']
-    print(name)
     psw = request.form['psw']
     return redirect(url_for('feed', name=name))
 
 #TODO: make it posonalized for user and use tweet times
 @app.route('/explore')
 def explore():
-    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password=password)
+    con = psycopg2.connect(dbname=dbname, user='postgres', host=host, password=password)
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     pop_users_by_replies_q ='''SELECT u.name, count(*) as n_replies
@@ -219,7 +223,7 @@ def explore():
 
 @app.route('/profile/<name>')
 def profile(name):
-    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password=password)
+    con = psycopg2.connect(dbname=dbname, user='postgres', host=host, password=password)
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     tweets_q = '''SELECT * 
@@ -321,7 +325,7 @@ def profile(name):
 
 @app.route('/trend/<hash>')
 def trend(hash):
-    con = psycopg2.connect(dbname='twitter_lite', user='postgres', host='localhost', password=password)
+    con = psycopg2.connect(dbname=dbname, user='postgres', host=host, password=password)
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     print("testing", hash)
     tweets_q = '''SELECT *
@@ -344,5 +348,4 @@ def trend(hash):
     
 
 if __name__ == "__main__":
-	app.run(debug=True)
-
+	app.run()

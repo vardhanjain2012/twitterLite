@@ -40,7 +40,7 @@ CREATE TABLE wordtable (
 
 CREATE TABLE tweets_withoutwords_staging (
     user_name text NOT NULL,
-    id bigint NOT NULL,
+    id bigint NOT NULL, 
     date date NOT NULL,
     time time NOT NULL,
     via text NOT NULL,
